@@ -70,11 +70,8 @@ LitColorTextureProgram::LitColorTextureProgram() {
 		//fragment shader:
 		"#version 330\n"
 		"uniform sampler2D TEX;\n"
-		"uniform int LIGHT_TYPE;\n"
-		"uniform vec3 LIGHT_LOCATION;\n"
 		"uniform vec3 LIGHT_DIRECTION;\n"
 		"uniform vec3 LIGHT_ENERGY;\n"
-		"uniform float LIGHT_CUTOFF;\n"
 		"uniform float FOG_MAX_VIS_DISTANCE;\n"
 		"uniform vec3 FOG_COLOR;\n"
 		"in vec3 position;\n"
@@ -115,11 +112,8 @@ LitColorTextureProgram::LitColorTextureProgram() {
 	FOG_MAX_VIS_DISTANCE_float = glGetUniformLocation(program, "FOG_MAX_VIS_DISTANCE");
 	FOG_COLOR_vec3 = glGetUniformLocation(program, "FOG_COLOR");
 
-	LIGHT_TYPE_int = glGetUniformLocation(program, "LIGHT_TYPE");
-	LIGHT_LOCATION_vec3 = glGetUniformLocation(program, "LIGHT_LOCATION");
 	LIGHT_DIRECTION_vec3 = glGetUniformLocation(program, "LIGHT_DIRECTION");
 	LIGHT_ENERGY_vec3 = glGetUniformLocation(program, "LIGHT_ENERGY");
-	LIGHT_CUTOFF_float = glGetUniformLocation(program, "LIGHT_CUTOFF");
 
 
 	GLuint TEX_sampler2D = glGetUniformLocation(program, "TEX");

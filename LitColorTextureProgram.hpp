@@ -25,11 +25,8 @@ struct LitColorTextureProgram {
 	GLuint FOG_COLOR_vec3 = -1U;
 
 	//lighting:
-	GLuint LIGHT_TYPE_int = -1U;
-	GLuint LIGHT_LOCATION_vec3 = -1U;
 	GLuint LIGHT_DIRECTION_vec3 = -1U;
 	GLuint LIGHT_ENERGY_vec3 = -1U;
-	GLuint LIGHT_CUTOFF_float = -1U;
 	
 	//Textures:
 	//TEXTURE0 - texture that is accessed by TexCoord

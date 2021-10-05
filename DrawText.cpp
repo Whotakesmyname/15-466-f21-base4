@@ -173,6 +173,7 @@ void DrawText::draw(const char *text, float x, float y) {
     glUniformMatrix4fv(projection_loc, 1, GL_FALSE, &projection[0].x);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     for (size_t i = 0; i < len; ++i) {
         FT_ULong glyph_id = info[i].codepoint;
@@ -205,9 +206,7 @@ void DrawText::draw(const char *text, float x, float y) {
         glBindTexture(GL_TEXTURE_2D, bitmap.texture_id);
 
         // update vertices data
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
         // draw call
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -218,8 +217,10 @@ void DrawText::draw(const char *text, float x, float y) {
     GL_ERRORS();
 
     // unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+    glUseProgram(0);
 
     // cleaning
     hb_buffer_destroy(hb_buffer);

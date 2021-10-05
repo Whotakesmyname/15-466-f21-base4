@@ -229,16 +229,31 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 	//update camera aspect ratio for drawable:
 	camera->aspect = float(drawable_size.x) / float(drawable_size.y);
 	text_drawer.set_window_size(static_cast<float>(drawable_size.x), static_cast<float>(drawable_size.y));
+	GL_ERRORS();
 
 	//set up light type and position for lit_color_texture_program:
 	// TODO: consider using the Light(s) in the scene to do this
+	GLint cur_program;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 	glUseProgram(lit_color_texture_program->program);
-	glUniform1i(lit_color_texture_program->LIGHT_TYPE_int, 1);
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
+	GL_ERRORS();
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 	glUniform3fv(lit_color_texture_program->LIGHT_DIRECTION_vec3, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f,-1.0f)));
+	GL_ERRORS();
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 	glUniform3fv(lit_color_texture_program->LIGHT_ENERGY_vec3, 1, glm::value_ptr(ambient_light));
+	GL_ERRORS();
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 	glUniform3fv(lit_color_texture_program->FOG_COLOR_vec3, 1, glm::value_ptr(sky_light));
+	GL_ERRORS();
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 	glUniform1f(lit_color_texture_program->FOG_MAX_VIS_DISTANCE_float, fog_max_vis_distance);
+	GL_ERRORS();
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 	glUseProgram(0);
+	GL_ERRORS();
+	glGetIntegerv(GL_CURRENT_PROGRAM, &cur_program);
 
 	glClearColor(sky_light.r, sky_light.g, sky_light.b, 1.0f);
 	glClearDepth(1.0f); //1.0 is actually the default value to clear the depth buffer to, but FYI you can change it.
