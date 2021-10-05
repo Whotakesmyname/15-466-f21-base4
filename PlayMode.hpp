@@ -8,6 +8,8 @@
 #include <vector>
 #include <deque>
 
+#include "DrawText.hpp"
+
 struct PlayMode : Mode {
 	PlayMode();
 	virtual ~PlayMode();
@@ -16,6 +18,8 @@ struct PlayMode : Mode {
 	virtual bool handle_event(SDL_Event const &, glm::uvec2 const &window_size) override;
 	virtual void update(float elapsed) override;
 	virtual void draw(glm::uvec2 const &drawable_size) override;
+
+	DrawText text_drawer;
 
 	//----- game state -----
 
@@ -28,21 +32,40 @@ struct PlayMode : Mode {
 	//local copy of the game scene (so code can change it during gameplay):
 	Scene scene;
 
-	//hexapod leg to wobble:
-	Scene::Transform *hip = nullptr;
-	Scene::Transform *upper_leg = nullptr;
-	Scene::Transform *lower_leg = nullptr;
-	glm::quat hip_base_rotation;
-	glm::quat upper_leg_base_rotation;
-	glm::quat lower_leg_base_rotation;
-	float wobble = 0.0f;
+	// scene parameters
+	float light_intensity = 1.f;
+	glm::vec3 ambient_light = glm::vec3(.8f);
+	const glm::vec3 ambient_light_max = glm::vec3(.8f);
+	glm::vec3 sky_light = glm::vec3(1.f);
+	const glm::vec3 sky_light_max = glm::vec3(1.f);
+	float fog_max_vis_distance = 40.f;
 
-	glm::vec3 get_leg_tip_position();
+	float radio_distance = 10.f;
 
-	//music coming from the tip of the leg (as a demonstration):
-	std::shared_ptr< Sound::PlayingSample > leg_tip_loop;
+	// camera parameters: yaw, pitch
+	glm::vec2 cam_params = glm::vec2(0.f, glm::pi<float>()/2);
+	// cache yaw quat
+	glm::quat cam_yaw = glm::quat(1.f, 0.f, 0.f, 0.f);
+
+	// transforms
+	Scene::Transform *world = nullptr;
+	Scene::Transform *radio = nullptr;
+
+	// sound handlers
+	std::shared_ptr<Sound::PlayingSample> footstep_loop;
+	bool footstep_playing = false;
+	std::shared_ptr<Sound::PlayingSample> blizzard_loop;
+	bool blizzard_supressed = false;
+
+	// music handler
+	std::shared_ptr<Sound::PlayingSample> music_loop;
+	size_t music_idx = 0;
+
 	
 	//camera:
 	Scene::Camera *camera = nullptr;
+
+	// helper function get radio location
+	glm::vec3 get_radio_location() const;
 
 };

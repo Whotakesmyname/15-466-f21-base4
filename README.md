@@ -1,10 +1,12 @@
-# (TODO: your game's title)
+# Realtime Text Rendering
 
-Author: (TODO: your name)
+Author: Harrison Chen
 
-Design: (TODO: In two sentences or fewer, describe what is new and interesting about your game.)
+Design: It is really hard to come up with a meaningful plot. I just implemented the realtime
+text rendering engine who render text one-the-fly with a cache.
 
-Text Drawing: (TODO: how does the text drawing in this game work? Is text precomputed? Rendered at runtime? What files or utilities are involved?)
+Text Drawing: It render text on-the-fly, handles ligatures with Harfbuzz and render bitmap with
+Freetype. It uses a cache to boost performance in case of massive text rendering.
 
 Screen Shot:
 
@@ -14,7 +16,8 @@ How To Play:
 
 (TODO: describe the controls and (if needed) goals/strategy.)
 
-Sources: (TODO: list a source URL for any assets you did not create yourself. Make sure you have a license for the asset.)
+Sources: 
+- [Shadows Into Light](https://fonts.google.com/specimen/Shadows+Into+Light?query=shadows) font is designed by Kimberly Geswein, released under [Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 
 This game was built with [NEST](NEST.md).
 
