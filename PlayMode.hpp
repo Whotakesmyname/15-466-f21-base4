@@ -23,6 +23,21 @@ struct PlayMode : Mode {
 
 	//----- game state -----
 
+	struct Textline {
+		std::string text;
+		float x, y;
+		Textline(std::string text, float x, float y): text(text), x(x), y(y) {}
+	};
+	std::vector<Textline> text_lines;
+
+	// game logic
+	enum GameState {
+		NONE, START, STOP, LEFT, RIGHT
+	};
+	GameState game_state = NONE;
+	int radio_picked = 0;
+	float still_time = 10.f;
+
 	//input tracking:
 	struct Button {
 		uint8_t downs = 0;

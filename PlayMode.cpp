@@ -150,7 +150,6 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 }
 
 void PlayMode::update(float elapsed) {
-
 	// move camera:
 	{
 
@@ -208,6 +207,7 @@ void PlayMode::update(float elapsed) {
 			Sound::play(*pickup_sample);
 			if (light_intensity < .5f) Sound::play(*shiver_sample, 2.f);
 			regenerate_radio();
+			radio_picked++;
 		}
 	}
 
@@ -223,6 +223,83 @@ void PlayMode::update(float elapsed) {
 
 	// //move sound to follow radio position:
 	music_loop->set_position(get_radio_location(), 1.0f / 60.0f);
+
+	// game logic
+	// state transfer
+	switch (game_state) {
+		case NONE: {
+			game_state = START;
+			text_lines.emplace_back("I need to find my way home. The radio is strange. Take a look.", 50.f, 320.f);
+			break;
+		}
+		case START: {
+			switch (radio_picked) {
+				case 1: {
+					text_lines.clear();
+					text_lines.emplace_back("I took its battery out. Maybe it can be useful.", 50.f, 340.f);
+					text_lines.emplace_back("But I can still hear the music somehow...", 50.f, 300.f);
+					break;
+				}
+				case 2: {
+					text_lines.clear();
+					text_lines.emplace_back("Why there are so many radios left here? Who left them here?", 50.f, 320.f);
+					break;
+				}
+				case 3: {
+					text_lines.clear();
+					text_lines.emplace_back("The sky is getting darker.", 50.f, 340.f);
+					text_lines.emplace_back("Should I just stay here waiting for help or keep looking for those creepy music?", 50.f, 300.f);
+					game_state = STOP;
+					break;
+				}
+				default: break;
+			}
+			break;
+		}
+		case STOP: {
+			if (!left.pressed && !right.pressed && !up.pressed && !down.pressed) {
+				still_time -= elapsed;
+				if (still_time < 0.f) {
+					light_intensity = 0.f;
+					music_loop->set_volume(2.f, 2.f);
+					text_lines.clear();
+					text_lines.emplace_back("You stayed. Nobody has ever come. You fell into a long sleep.", 50.f, 320.f);
+				}
+			} else {
+				still_time = 10.f;
+				switch (radio_picked) {
+					case 5: {
+						text_lines.clear();
+						text_lines.emplace_back("Why do I need to follow these music?", 50.f, 320.f);
+						break;
+					}
+					case 7: {
+						text_lines.clear();
+						text_lines.emplace_back("It's meaningless.", 50.f, 320.f);
+						break;
+					}
+					case 9: {
+						text_lines.clear();
+						text_lines.emplace_back("I am tired.", 100.f, 320.f);
+						break;
+					}
+					case 10: {
+						text_lines.clear();
+						text_lines.emplace_back("That's enough.", 100.f, 320.f);
+						break;
+					}
+					case 20: {
+						text_lines.clear();
+						text_lines.emplace_back("Maybe today is not a good day to die. But I have no choice.", 100.f, 320.f);
+						break;
+					}
+					default: break;
+				}
+			}
+			break;
+		}
+		default: break;
+	}
 }
 
 void PlayMode::draw(glm::uvec2 const &drawable_size) {
@@ -266,6 +343,9 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 
 	{ //use DrawLines to overlay some text:
 		glDisable(GL_DEPTH_TEST);
+		for (auto&& line : text_lines) {
+			text_drawer.draw(line.text.c_str(), line.x, line.y);
+		}
 		text_drawer.draw("Mouse motion rotates camera; WASD moves; escape ungrabs mouse", 1.f, 10.f);
 	}
 	GL_ERRORS();
