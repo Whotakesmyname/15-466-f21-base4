@@ -56,7 +56,7 @@ Load< Sound::Sample > shiver_sample(LoadTagDefault, []() -> Sound::Sample const 
 	return new Sound::Sample(data_path("shivering.opus"));
 });
 
-PlayMode::PlayMode() : scene(*scene_res), text_drawer(data_path("ShadowsIntoLight-Regular.ttf").c_str()) {
+PlayMode::PlayMode() : text_drawer(data_path("ShadowsIntoLight-Regular.ttf").c_str()), scene(*scene_res) {
 	// init text drawer
 	text_drawer.set_font_size(36);
 	text_drawer.set_font_color(0, 0, 0);
